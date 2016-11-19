@@ -1,0 +1,47 @@
+Sample Code:
+
+
+@Path("/messages")
+public class MyMessage {
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response NewMethod() {
+		String output = "Hello World";
+		 return Response.ok(output) //200
+				.header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+				.allow("OPTIONS").build();
+			  }
+}
+
+Where,
+/messages represts url like: http://localhost:8080/Jersey/webapi/messages
+
+
+ReturnType should be response of the method and the string that we need to output is stored in the output variable/
+.header is required and inseted of * we can also speccify the path like url as above other things will remain same
+
+Alternate Way:
+
+INCLUDE THIS CLASS:
+
+@Provider
+public class CORSFilter implements ContainerResponseFilter {
+
+    @Override
+    public void filter(ContainerRequestContext request,
+            ContainerResponseContext response) throws IOException {
+        response.getHeaders().add("Access-Control-Allow-Origin", "*");
+        response.getHeaders().add("Access-Control-Allow-Headers",
+                "origin, content-type, accept, authorization");
+        response.getHeaders().add("Access-Control-Allow-Credentials", "true");
+        response.getHeaders().add("Access-Control-Allow-Methods",
+                "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+    }
+}
+And in the web.xml add the following lines
+
+		<init-param>
+  			<param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
+  			<param-value>com.message.data.CORSFilter</param-value>
+		</init-param> 
